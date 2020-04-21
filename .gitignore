@@ -1,0 +1,5 @@
+# Ignore Gradle project-specific cache directory
+../eessi-pensjon-shared/.gradle
+
+# Ignore Gradle build output directory
+build
