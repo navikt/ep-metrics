@@ -9,6 +9,7 @@ plugins {
 group = "no.nav.eessi.pensjon"
 
 repositories {
+    mavenCentral()
     maven {
         url = uri("https://repo.adeo.no/repository/maven-central")
     }
