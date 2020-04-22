@@ -14,10 +14,18 @@ jobs:
     - name: set up git
       run: git config user.email "${{ github.actor }}@users.noreply.github.com" && git config user.name "Github Actions"
       
-    - name: Build and update version
+    - name: capture version number for release
+      run: export $(grep -v '^#' gradle.properties | grep 'version=' | xargs)
+      
+    - name: build and update version
       run: ./gradlew build release -Prelease.useAutomaticVersion=true
+  
+    - name: check out release-version
+    - uses: actions/checkout@v2
+      with: 
+        ref: "release-$version"
 
-    - name: Publish package
+    - name: publish package
       run: ./gradlew publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
