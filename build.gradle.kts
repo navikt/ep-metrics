@@ -27,7 +27,7 @@ java {
 
 // https://github.com/researchgate/gradle-release
 release {
-    newVersionCommitMessage = "[Release Plugin] - new version commit: "
+    newVersionCommitMessage = "[Release Plugin] - next version commit: "
     tagTemplate = "release-\${version}"
 }
 
@@ -42,7 +42,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/navikt/eessi-pensjon-shared")
+            url = uri("https://maven.pkg.github.com/navikt/${rootProject.name}")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
