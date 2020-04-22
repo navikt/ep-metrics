@@ -16,3 +16,8 @@ jobs:
       
     - name: Build and update version
       run: ./gradlew build release -Prelease.useAutomaticVersion=true
+
+    - name: Publish package
+      run: ./gradlew publish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
