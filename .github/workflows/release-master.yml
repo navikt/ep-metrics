@@ -21,7 +21,7 @@ jobs:
       run: ./gradlew build release -Prelease.useAutomaticVersion=true
   
     - name: check out release-version
-    - uses: actions/checkout@v2
+      uses: actions/checkout@v2
       with: 
         ref: "release-$version"
 
