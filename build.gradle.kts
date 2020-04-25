@@ -43,7 +43,7 @@ val junitVersion by extra("5.6.2")
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.+")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.4.2")
     implementation("org.springframework:spring-web:$springVersion")
 
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
