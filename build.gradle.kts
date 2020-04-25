@@ -10,7 +10,7 @@ plugins {
     id("jacoco")
     id("com.adarshr.test-logger") version "2.0.0"
     id("org.jetbrains.kotlin.plugin.spring") version "1.3.72"
-    id("com.github.ben-manes.versions") version "0.27.0"
+    id("com.github.ben-manes.versions") version "0.28.0"
 }
 
 group = "no.nav.eessi.pensjon"
@@ -28,7 +28,7 @@ repositories {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions. freeCompilerArgs = listOf("-Xjsr305=strict")
+    kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
     kotlinOptions.jvmTarget = "1.8"
 }
 
@@ -36,9 +36,8 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-val springVersion by extra("5.+")
-val slf4jVersion by extra("1.+")
-val junitVersion by extra("5.+")
+val springVersion by extra("5.2.5.RELEASE")
+val junitVersion by extra("5.6.2")
 
 
 dependencies {
@@ -50,22 +49,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testImplementation("org.springframework:spring-test:$springVersion")
     testImplementation("io.mockk:mockk:1.10.0")
-
-    configurations.all {
-        resolutionStrategy {
-            componentSelection {
-                all {
-                    val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview", "pr").any { qualifier ->
-                        candidate.version.matches("(?i).*[.-]${qualifier}[.\\d-]*".toRegex())
-                    }
-                    if (rejected) {
-                        reject("Not a real release")
-                    }
-                }
-            }
-        }
-//        exclude(mapOf("group" to "org.junit"))
-    }
 }
 
 // https://github.com/researchgate/gradle-release
@@ -110,7 +93,6 @@ tasks.named("sonarqube") {
 }
 
 /* https://github.com/ben-manes/gradle-versions-plugin */
-// Fixme - duplication
 tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask> {
     resolutionStrategy {
         componentSelection {
