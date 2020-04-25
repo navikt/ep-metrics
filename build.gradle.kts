@@ -1,12 +1,24 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.3.70"
+    id("org.jetbrains.kotlin.jvm") version "1.3.72"
     `java-library`
-    id("net.researchgate.release") version "2.6.0"
+    id("net.researchgate.release") version "2.8.1"
     `maven-publish`
+    id("org.sonarqube") version "2.8"
+    id("jacoco")
+    id("com.adarshr.test-logger") version "2.0.0"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.3.72"
+    id("com.github.ben-manes.versions") version "0.27.0"
 }
 
 group = "no.nav.eessi.pensjon"
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 repositories {
     mavenCentral()
@@ -15,14 +27,45 @@ repositories {
     }
 }
 
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions. freeCompilerArgs = listOf("-Xjsr305=strict")
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
+val springVersion by extra("5.+")
+val slf4jVersion by extra("1.+")
+val junitVersion by extra("5.+")
+
+
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-}
+    implementation("io.micrometer:micrometer-registry-prometheus:1.+")
+    implementation("org.springframework:spring-web:$springVersion")
 
-java {
-    withJavadocJar()
-    withSourcesJar()
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation("org.springframework:spring-test:$springVersion")
+    testImplementation("io.mockk:mockk:1.10.0")
+
+    configurations.all {
+        resolutionStrategy {
+            componentSelection {
+                all {
+                    val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview", "pr").any { qualifier ->
+                        candidate.version.matches("(?i).*[.-]${qualifier}[.\\d-]*".toRegex())
+                    }
+                    if (rejected) {
+                        reject("Not a real release")
+                    }
+                }
+            }
+        }
+//        exclude(mapOf("group" to "org.junit"))
+    }
 }
 
 // https://github.com/researchgate/gradle-release
@@ -49,4 +92,37 @@ publishing {
             }
         }
     }
+}
+
+// https://docs.gradle.org/current/userguide/jacoco_plugin.html
+jacoco {
+    toolVersion = "0.8.5"
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.isEnabled = true
+    }
+}
+
+tasks.named("sonarqube") {
+    dependsOn("jacocoTestReport")
+}
+
+/* https://github.com/ben-manes/gradle-versions-plugin */
+// Fixme - duplication
+tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask> {
+    resolutionStrategy {
+        componentSelection {
+            all {
+                val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview", "pr").any { qualifier ->
+                    candidate.version.matches("(?i).*[.-]${qualifier}[.\\d-]*".toRegex())
+                }
+                if (rejected) {
+                    reject("Not a real release")
+                }
+            }
+        }
+    }
+    revision = "release"
 }
