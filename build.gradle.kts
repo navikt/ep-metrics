@@ -22,9 +22,6 @@ java {
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://repo.adeo.no/repository/maven-central")
-    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
