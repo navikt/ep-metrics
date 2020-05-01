@@ -3,10 +3,8 @@ package no.nav.eessi.pensjon.metrics
 import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
-import no.nav.eessi.pensjon.metrics.MetricsHelper.Metric
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import javax.annotation.PostConstruct
 
 @Component
 class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) val configuration: Configuration = Configuration()) {

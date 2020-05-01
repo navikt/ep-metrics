@@ -42,7 +42,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.micrometer:micrometer-registry-prometheus:1.4.2")
     implementation("org.springframework:spring-web:$springVersion")
-    implementation("org.springframework:spring-context:$springVersion")
     implementation("javax.servlet:javax.servlet-api:4.0.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
