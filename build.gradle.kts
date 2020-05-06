@@ -94,17 +94,9 @@ tasks.named("sonarqube") {
 
 /* https://github.com/ben-manes/gradle-versions-plugin */
 tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask> {
-    resolutionStrategy {
-        componentSelection {
-            all {
-                val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview", "pr").any { qualifier ->
-                    candidate.version.matches("(?i).*[.-]${qualifier}[.\\d-]*".toRegex())
-                }
-                if (rejected) {
-                    reject("Not a real release")
-                }
-            }
-        }
+    rejectVersionIf {
+        listOf("alpha", "beta", "rc", "cr", "m", "preview", "pr2")
+                .any { qualifier -> """(?i).*[.-]${qualifier}[.\d-]*""".toRegex().matches(candidate.version) }
     }
     revision = "release"
 }
