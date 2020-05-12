@@ -1,4 +1,4 @@
-# eessi-pensjon-metrics
+# ep-metrics
 
 ## Releasing
 
