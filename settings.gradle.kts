@@ -1,1 +1,1 @@
-rootProject.name = "eessi-pensjon-metrics"
+rootProject.name = "ep-metrics"
