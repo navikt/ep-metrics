@@ -6,12 +6,12 @@ plugins {
     `java-library`
     id("net.researchgate.release") version "2.8.1"
     `maven-publish`
-    id("org.sonarqube") version "2.8"
+    id("org.sonarqube") version "3.0"
     id("jacoco")
     id("com.adarshr.test-logger") version "2.0.0"
     id("org.jetbrains.kotlin.plugin.spring") version "1.3.72"
     id("com.github.ben-manes.versions") version "0.28.0"
-    id("se.patrikerdes.use-latest-versions") version "0.2.13"
+    id("se.patrikerdes.use-latest-versions") version "0.2.14"
     id("org.owasp.dependencycheck") version "5.3.2.1"
 }
 
@@ -35,18 +35,19 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-val springVersion by extra("5.2.5.RELEASE")
-val junitVersion by extra("5.6.2")
+val springVersion by extra("5.+")
+val junitVersion by extra("5.+")
 
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.4.2")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.5.1")
     implementation("org.springframework:spring-web:$springVersion")
     implementation("org.springframework:spring-context:$springVersion")
-    implementation("javax.servlet:javax.servlet-api:4.0.1")
+    compileOnly("javax.servlet:javax.servlet-api:4.0.1")
 
+    testImplementation("javax.servlet:javax.servlet-api:4.0.1")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testImplementation("org.springframework:spring-test:$springVersion")
     testImplementation("io.mockk:mockk:1.10.0")
