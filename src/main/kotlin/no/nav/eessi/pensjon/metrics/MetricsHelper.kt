@@ -12,13 +12,24 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
     fun init(method: String,
              meterName: String = configuration.measureMeterName,
              success: String = configuration.successTypeTagValue,
-             failure: String = configuration.failureTypeTagValue) = Metric(method, meterName, success, failure)
+             failure: String = configuration.failureTypeTagValue,
+             toggleOn: String = configuration.toggleOnTagValue,
+             toggleOff: String = configuration.toggleOffTagValue,
+             alert: Toggle = Toggle.ON) = Metric(method, meterName, success, failure, toggleOn, toggleOff, alert)
+
+    enum class Toggle { ON, OFF;
+        fun text(toggleOn: String, toggleOff: String) =
+                if (this == ON) toggleOn else toggleOff
+    }
 
     inner class Metric(
             private val method: String,
             private val meterName: String = configuration.measureMeterName,
             private val success: String = configuration.successTypeTagValue,
-            private val failure: String = configuration.failureTypeTagValue) {
+            private val failure: String = configuration.failureTypeTagValue,
+            private val toggleOn: String = configuration.toggleOnTagValue,
+            private val toggleOff: String = configuration.toggleOffTagValue,
+            private val alert: Toggle = Toggle.ON) {
 
         /**
          * Alle counters må legges inn i init'es lik at counteren med konkrete tagger blir initiert med 0.
@@ -28,11 +39,13 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
             Counter.builder(meterName)
                     .tag(configuration.typeTag, success)
                     .tag(configuration.methodTag, method)
+                    .tag(configuration.alertTag, alert.text(toggleOn, toggleOff) )
                     .register(registry)
 
             Counter.builder(meterName)
                     .tag(configuration.typeTag, failure)
                     .tag(configuration.methodTag, method)
+                    .tag(configuration.alertTag, alert.text(toggleOn, toggleOff))
                     .register(registry)
         }
 
@@ -55,6 +68,7 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
                     Counter.builder(meterName)
                             .tag(configuration.methodTag, method)
                             .tag(configuration.typeTag, typeTag)
+                            .tag(configuration.alertTag, alert.text(toggleOn, toggleOff))
                             .register(registry)
                             .increment()
                 } catch (e: Exception) {
@@ -73,8 +87,12 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
             val eventTag: String = "event",
             val methodTag: String = "method",
             val typeTag: String = "type",
+            val alertTag: String = "alert",
 
             val successTypeTagValue: String = "successful",
-            val failureTypeTagValue: String = "failed"
+            val failureTypeTagValue: String = "failed",
+
+            val toggleOnTagValue: String = "on",
+            val toggleOffTagValue: String = "off"
     )
 }

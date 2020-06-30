@@ -35,6 +35,7 @@ internal class MetricsHelperTest {
                 registry.counter(
                         config.measureMeterName,
                         config.methodTag, "dummy",
+                        config.alertTag, config.toggleOnTagValue,
                         config.typeTag, config.successTypeTagValue)
                         .count(),
                 0.0001)
@@ -56,6 +57,7 @@ internal class MetricsHelperTest {
                 registry.counter(
                         config.measureMeterName,
                         config.methodTag, "dummy",
+                        config.alertTag, config.toggleOnTagValue,
                         config.typeTag, config.failureTypeTagValue)
                         .count(),
                 0.0001)
@@ -77,6 +79,7 @@ internal class MetricsHelperTest {
                 registry.counter(
                         config.measureMeterName,
                         config.methodTag, "dummy",
+                        config.alertTag, config.toggleOnTagValue,
                         config.typeTag, config.failureTypeTagValue)
                         .count(),
                 0.0001)
@@ -102,5 +105,55 @@ internal class MetricsHelperTest {
                 100.0,
                 timer.totalTime(TimeUnit.MILLISECONDS),
                 10.0)
+    }
+
+    @Test
+    fun `measure accepts an alert parameter that results in a alert-tag`() {
+        val dummy = metricsHelper.init("dummy", alert = MetricsHelper.Toggle.OFF)
+        try {
+            dummy.measure {
+                throw IOError(RuntimeException())
+            }
+        } catch (ex: IOError) {
+            // ignoring on purpose
+        }
+
+        // when
+
+        // then
+        assertEquals(
+                1.0,
+                registry.counter(
+                        config.measureMeterName,
+                        config.methodTag, "dummy",
+                        config.alertTag, config.toggleOffTagValue,
+                        config.typeTag, config.failureTypeTagValue)
+                        .count(),
+                0.0001)
+
+    }
+
+    @Test
+    fun `default is alert on`() {
+        val dummy = metricsHelper.init("dummy")
+
+        try {
+            dummy.measure {
+                throw IOError(RuntimeException())
+            }
+        } catch (ex: IOError) {
+            // ignoring on purpose
+        }
+
+        assertEquals(
+                1.0,
+                registry.counter(
+                        config.measureMeterName,
+                        config.methodTag, "dummy",
+                        config.alertTag, "on",
+                        config.typeTag, config.failureTypeTagValue)
+                        .count(),
+                0.0001)
+
     }
 }
