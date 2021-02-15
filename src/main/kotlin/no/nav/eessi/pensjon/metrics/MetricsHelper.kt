@@ -4,7 +4,9 @@ import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpStatusCodeException
 
 @Component
 class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) val configuration: Configuration = Configuration()) {
@@ -15,7 +17,8 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
              failure: String = configuration.failureTypeTagValue,
              toggleOn: String = configuration.toggleOnTagValue,
              toggleOff: String = configuration.toggleOffTagValue,
-             alert: Toggle = Toggle.ON) = Metric(method, meterName, success, failure, toggleOn, toggleOff, alert)
+             ignoreHttpCodes: List<HttpStatus> = emptyList(),
+             alert: Toggle = Toggle.ON) = Metric(method, meterName, success, failure, toggleOn, toggleOff, ignoreHttpCodes, alert)
 
     enum class Toggle { ON, OFF;
         fun text(toggleOn: String, toggleOff: String) =
@@ -29,6 +32,7 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
             private val failure: String = configuration.failureTypeTagValue,
             private val toggleOn: String = configuration.toggleOnTagValue,
             private val toggleOff: String = configuration.toggleOffTagValue,
+            private val ignoreHttpCodes: List<HttpStatus>,
             private val alert: Toggle = Toggle.ON) {
 
         /**
@@ -37,21 +41,34 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
          */
         init {
             Counter.builder(meterName)
-                    .tag(configuration.typeTag, success)
-                    .tag(configuration.methodTag, method)
-                    .tag(configuration.alertTag, alert.text(toggleOn, toggleOff) )
-                    .register(registry)
+                .tag(configuration.typeTag, success)
+                .tag(configuration.methodTag, method)
+                .tag(configuration.alertTag, toggleOn)
+                .register(registry)
 
             Counter.builder(meterName)
-                    .tag(configuration.typeTag, failure)
-                    .tag(configuration.methodTag, method)
-                    .tag(configuration.alertTag, alert.text(toggleOn, toggleOff))
-                    .register(registry)
+                .tag(configuration.typeTag, success)
+                .tag(configuration.methodTag, method)
+                .tag(configuration.alertTag, toggleOff)
+                .register(registry)
+
+            Counter.builder(meterName)
+                .tag(configuration.typeTag, failure)
+                .tag(configuration.methodTag, method)
+                .tag(configuration.alertTag, toggleOn)
+                .register(registry)
+
+            Counter.builder(meterName)
+                .tag(configuration.typeTag, failure)
+                .tag(configuration.methodTag, method)
+                .tag(configuration.alertTag, toggleOff)
+                .register(registry)
         }
 
         fun <R> measure(block: () -> R): R {
 
             var typeTag = success
+            var ignoreErrorCode = false
 
             try {
                 return Timer.builder("$meterName.${configuration.measureTimerSuffix}")
@@ -61,6 +78,7 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
                             block.invoke()
                         }
             } catch (throwable: Throwable) {
+                if(throwable is HttpStatusCodeException && throwable.statusCode in ignoreHttpCodes) ignoreErrorCode = true
                 typeTag = failure
                 throw throwable
             } finally {
@@ -68,7 +86,7 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
                     Counter.builder(meterName)
                             .tag(configuration.methodTag, method)
                             .tag(configuration.typeTag, typeTag)
-                            .tag(configuration.alertTag, alert.text(toggleOn, toggleOff))
+                            .tag(configuration.alertTag, if(ignoreErrorCode) configuration.toggleOffTagValue else alert.text(toggleOn, toggleOff))
                             .register(registry)
                             .increment()
                 } catch (e: Exception) {

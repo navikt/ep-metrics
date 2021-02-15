@@ -7,6 +7,8 @@ import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
+import org.springframework.web.client.HttpClientErrorException
 import java.io.IOError
 import java.util.concurrent.TimeUnit
 
@@ -156,4 +158,29 @@ internal class MetricsHelperTest {
                 0.0001)
 
     }
+
+    @Test
+    fun `given a 404 httpCode and ignore 404 when measuring then alert off`() {
+        val dummy = metricsHelper.init(method="dummy",ignoreHttpCodes = listOf(HttpStatus.NOT_FOUND))
+
+        try {
+            dummy.measure {
+                throw HttpClientErrorException(HttpStatus.NOT_FOUND)
+            }
+        } catch (ex: HttpClientErrorException) {
+            // ignoring on purpose
+        }
+
+        assertEquals(
+            1.0,
+            registry.counter(
+                config.measureMeterName,
+                config.methodTag, "dummy",
+                config.alertTag, "off",
+                config.typeTag, config.failureTypeTagValue)
+                .count(),
+            0.0001)
+
+    }
+
 }
