@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpStatusCodeException
+import org.springframework.web.server.ResponseStatusException
 
 @Component
 class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) val configuration: Configuration = Configuration()) {
@@ -79,6 +80,8 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
                         }
             } catch (throwable: Throwable) {
                 if(throwable is HttpStatusCodeException && throwable.statusCode in ignoreHttpCodes) ignoreErrorCode = true
+                if(throwable is ResponseStatusException && throwable.status in ignoreHttpCodes) ignoreErrorCode = true
+
                 typeTag = failure
                 throw throwable
             } finally {
