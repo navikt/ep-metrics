@@ -6,8 +6,6 @@ plugins {
     `java-library`
     id("net.researchgate.release") version "2.8.1"
     `maven-publish`
-    id("org.sonarqube") version "3.0"
-    id("jacoco")
     id("com.adarshr.test-logger") version "2.0.0"
     id("org.jetbrains.kotlin.plugin.spring") version "1.4.30"
     id("com.github.ben-manes.versions") version "0.28.0"
@@ -77,21 +75,6 @@ publishing {
             }
         }
     }
-}
-
-// https://docs.gradle.org/current/userguide/jacoco_plugin.html
-jacoco {
-    toolVersion = "0.8.5"
-}
-
-tasks.jacocoTestReport {
-    reports {
-        xml.isEnabled = true
-    }
-}
-
-tasks.named("sonarqube") {
-    dependsOn("jacocoTestReport")
 }
 
 /* https://github.com/ben-manes/gradle-versions-plugin */
