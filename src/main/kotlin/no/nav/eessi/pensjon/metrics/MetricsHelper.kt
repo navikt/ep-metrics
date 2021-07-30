@@ -66,7 +66,7 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
                 .register(registry)
         }
 
-        fun <R> measure(block: () -> R): R {
+        fun <R> measure(block: () -> R): R? {
 
             var typeTag = success
             var ignoreErrorCode = false
