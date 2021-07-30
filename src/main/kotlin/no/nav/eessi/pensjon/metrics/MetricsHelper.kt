@@ -66,7 +66,7 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
                 .register(registry)
         }
 
-        fun <R> measure(block: () -> R): R? {
+        fun <R> measure(block: () -> R): R {
 
             var typeTag = success
             var ignoreErrorCode = false
@@ -77,7 +77,7 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
                         .register(registry)
                         .recordCallable {
                             block.invoke()
-                        }
+                        }!!
             } catch (throwable: Throwable) {
                 if(throwable is HttpStatusCodeException && throwable.statusCode in ignoreHttpCodes) ignoreErrorCode = true
                 if(throwable is ResponseStatusException && throwable.status in ignoreHttpCodes) ignoreErrorCode = true
