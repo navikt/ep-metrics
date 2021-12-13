@@ -10,7 +10,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.spring") version "1.5.21"
     id("com.github.ben-manes.versions") version "0.28.0"
     id("se.patrikerdes.use-latest-versions") version "0.2.14"
-    id("org.owasp.dependencycheck") version "5.3.2.1"
+    id("org.owasp.dependencycheck") version "6.5.0.1"
 }
 
 group = "no.nav.eessi.pensjon"
