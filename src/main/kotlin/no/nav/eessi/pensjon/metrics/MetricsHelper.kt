@@ -72,12 +72,14 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
             var ignoreErrorCode = false
 
             try {
-                return Timer.builder("$meterName.${configuration.measureTimerSuffix}")
-                        .tag(configuration.methodTag, method)
-                        .register(registry)
-                        .recordCallable {
-                            block.invoke()
-                        }!!
+                return block.let {
+                            Timer.builder("$meterName.${configuration.measureTimerSuffix}")
+                                .tag(configuration.methodTag, method)
+                                .register(registry)
+                                .recordCallable {
+                                    it.invoke()
+                                }
+                        } ?: block.invoke()
             } catch (throwable: Throwable) {
                 if(throwable is HttpStatusCodeException && throwable.statusCode in ignoreHttpCodes) ignoreErrorCode = true
                 if(throwable is ResponseStatusException && throwable.status in ignoreHttpCodes) ignoreErrorCode = true

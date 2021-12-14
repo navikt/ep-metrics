@@ -44,6 +44,30 @@ internal class MetricsHelperTest {
     }
 
     @Test
+    fun measure_counts_success_up_by_one_if_no_exception_part2() {
+        fun minime(a: Int, b: Int, z: Int) : Int = a * b * z
+
+
+        val dummy = metricsHelper.init("dummy")
+        val result = dummy.measure {
+            minime(6,10,10)
+        }
+
+        assertEquals(
+            1.0,
+            registry.counter(
+                config.measureMeterName,
+                config.methodTag, "dummy",
+                config.alertTag, config.toggleOnTagValue,
+                config.typeTag, config.successTypeTagValue)
+                .count(),
+            0.0001)
+
+        assertEquals(600, result)
+    }
+
+
+    @Test
     fun measure_counts_failure_up_by_one_if_exception_thrown() {
         val dummy = metricsHelper.init("dummy")
         try {
