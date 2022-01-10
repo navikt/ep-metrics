@@ -29,8 +29,6 @@ const val UNKNOWN_EXCEPTION_TAG_VALUE = "unknown"
 class RequestCountFilter(val meterRegistry: MeterRegistry, @Value("\${METRICS_REQUESTFILTER_ENABLE}") private val metricsEnableStatus: Boolean = false) : Filter {
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
-        if (metricsEnableStatus.not()) return
-
         var exception = NO_EXCEPTION_TAG_VALUE
 
         try {
@@ -39,6 +37,8 @@ class RequestCountFilter(val meterRegistry: MeterRegistry, @Value("\${METRICS_RE
             exception = e.javaClass.simpleName
             throw e
         } finally {
+            if (metricsEnableStatus.not()) return
+
             val httpServletRequest = request as HttpServletRequest
             val httpServletResponse = response as HttpServletResponse
 
