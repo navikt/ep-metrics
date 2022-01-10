@@ -17,7 +17,7 @@ import javax.servlet.ServletException
 class RequestCountFilterTest {
 
     private val meterRegistry = SimpleMeterRegistry()
-    private val filter = RequestCountFilter(meterRegistry)
+    private val filter = RequestCountFilter(meterRegistry, true)
 
     private val someUri = "/abc"
     private val httpGet = "GET"
@@ -34,6 +34,17 @@ class RequestCountFilterTest {
 
         assertNotNull(chain.request)
     }
+
+    @Test
+    fun `should not count successful calls`() {
+        val filter2 = RequestCountFilter(meterRegistry, false)
+
+        val request = MockHttpServletRequest(httpGet, someUri)
+        filter2.doFilter(request, MockHttpServletResponse(), MockFilterChain())
+
+        assertCount(0, httpGet, someUri, SUCCESS_VALUE, 200, NO_EXCEPTION_TAG_VALUE)
+    }
+
 
     @Test
     fun `should count successful calls`() {

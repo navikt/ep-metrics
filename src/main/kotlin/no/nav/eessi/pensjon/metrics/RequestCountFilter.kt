@@ -1,6 +1,7 @@
 package no.nav.eessi.pensjon.metrics
 
 import io.micrometer.core.instrument.MeterRegistry
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import javax.servlet.Filter
 import javax.servlet.FilterChain
@@ -25,9 +26,10 @@ const val UNKNOWN_EXCEPTION_TAG_VALUE = "unknown"
  * Counts all incoming (synchronous) http requests
  */
 @Component
-class RequestCountFilter(val meterRegistry: MeterRegistry) : Filter {
+class RequestCountFilter(val meterRegistry: MeterRegistry, @Value("\${METRICS_REQUESTFILTER_ENABLE}") private val metricsEnableStatus: Boolean = false) : Filter {
 
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
+        if (metricsEnableStatus.not()) return
 
         var exception = NO_EXCEPTION_TAG_VALUE
 
