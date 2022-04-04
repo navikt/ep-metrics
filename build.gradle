@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springVersion = '5.3.17'
+        springVersion = '5.3.18'
         junitVersion = '5.8.2'
         prometheusVersion = '1.8.1'
         kotlinVersion = '1.6.10'
