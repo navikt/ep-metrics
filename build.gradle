@@ -1,10 +1,10 @@
 buildscript {
     ext {
-        springVersion = '5.3.18'
+        springVersion = '5.3.20'
         junitVersion = '5.8.2'
         prometheusVersion = '1.8.1'
         kotlinVersion = '1.6.10'
-        mockkVersion = '1.12.3'
+        mockkVersion = '1.12.4'
     }
 
     repositories {
@@ -15,13 +15,13 @@ buildscript {
 plugins {
     id("java-library")
     id("maven-publish")
-    id("org.jetbrains.kotlin.jvm") version "1.6.10"
+    id("org.jetbrains.kotlin.jvm") version "1.6.21"
     id("net.researchgate.release") version "2.8.1"
     id("com.adarshr.test-logger") version "3.2.0"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.6.10"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.6.21"
     id("com.github.ben-manes.versions") version "0.42.0"
     id("se.patrikerdes.use-latest-versions") version "0.2.18"
-    id("org.owasp.dependencycheck") version "7.0.1"
+    id("org.owasp.dependencycheck") version "7.1.0.1"
     id "org.sonarqube" version "3.3"
     id 'jacoco'
 }
@@ -68,8 +68,8 @@ jacocoTestReport {
 tasks.sonarqube.dependsOn tasks["jacocoTestReport"]
 
 dependencies {
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.6.10"))
-    implementation("io.micrometer:micrometer-registry-prometheus:1.8+")
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.6.21"))
+    implementation("io.micrometer:micrometer-registry-prometheus:1.9.0")
     implementation("org.springframework:spring-web:$springVersion")
     implementation("org.springframework:spring-context:$springVersion")
     compileOnly("javax.servlet:javax.servlet-api:4.0.1")
