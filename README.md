@@ -1,5 +1,10 @@
 # ep-metrics
 
+## Use
+
+Husk å definere `METRICS_REQUESTFILTER_ENABLE=true|false` i application.yml 
+(se: [RequestCountFilter.kt](src/main/kotlin/no/nav/eessi/pensjon/metrics/RequestCountFilter.kt))
+
 ## Releasing
 
 This library is released using the `net.researchgate/gradle-release`-plugin.
