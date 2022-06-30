@@ -68,7 +68,7 @@ jacocoTestReport {
 tasks.sonarqube.dependsOn tasks["jacocoTestReport"]
 
 dependencies {
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.6.21"))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.7.0"))
     implementation("io.micrometer:micrometer-registry-prometheus:1.9.0")
     implementation("org.springframework:spring-web:$springVersion")
     implementation("org.springframework:spring-context:$springVersion")
