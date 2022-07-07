@@ -3,6 +3,7 @@ package no.nav.eessi.pensjon.metrics
 import io.micrometer.core.instrument.Counter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
@@ -11,6 +12,10 @@ import org.springframework.web.server.ResponseStatusException
 
 @Component
 class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) val configuration: Configuration = Configuration()) {
+
+    companion object {
+        fun ForTest() = MetricsHelper(SimpleMeterRegistry())
+    }
 
     fun init(method: String,
              meterName: String = configuration.measureMeterName,
