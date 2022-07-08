@@ -1,8 +1,7 @@
 buildscript {
     ext {
-        springVersion = '5.3.20'
-        prometheusVersion = '1.8.1'
-        kotlinVersion = '1.6.10'
+        springVersion = '5.3.21'
+        kotlinVersion = '1.7.0'
         mockkVersion = '1.12.4'
     }
 
@@ -14,10 +13,10 @@ buildscript {
 plugins {
     id("java-library")
     id("maven-publish")
-    id("org.jetbrains.kotlin.jvm") version "1.7.0"
+    id("org.jetbrains.kotlin.jvm") version "${kotlinVersion}"
     id("net.researchgate.release") version "3.0.0"
     id("com.adarshr.test-logger") version "3.2.0"
-    id("org.jetbrains.kotlin.plugin.spring") version "1.7.0"
+    id("org.jetbrains.kotlin.plugin.spring") version "${kotlinVersion}"
     id("com.github.ben-manes.versions") version "0.42.0"
     id("se.patrikerdes.use-latest-versions") version "0.2.18"
     id("org.owasp.dependencycheck") version "7.1.1"
@@ -67,16 +66,21 @@ jacocoTestReport {
 tasks.sonarqube.dependsOn tasks["jacocoTestReport"]
 
 dependencies {
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.7.0"))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion"))
+
+    // Spring Framework BOM-fil overstyrer så vi får siste patch-versjon av Spring Framework
+    implementation(platform("org.springframework:spring-framework-bom:$springVersion"))
+    implementation("org.springframework:spring-web")
+    implementation("org.springframework:spring-context")
+
     implementation("io.micrometer:micrometer-registry-prometheus:1.9.0")
-    implementation("org.springframework:spring-web:$springVersion")
-    implementation("org.springframework:spring-context:$springVersion")
+
     compileOnly("javax.servlet:javax.servlet-api:4.0.1")
 
     testImplementation("javax.servlet:javax.servlet-api:4.0.1")
     testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.springframework:spring-test:$springVersion")
+    testImplementation("org.springframework:spring-test")
     testImplementation("io.mockk:mockk:$mockkVersion")
 }
 
