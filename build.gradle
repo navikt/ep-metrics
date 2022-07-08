@@ -73,7 +73,7 @@ dependencies {
     implementation("org.springframework:spring-web")
     implementation("org.springframework:spring-context")
 
-    implementation("io.micrometer:micrometer-registry-prometheus:1.9.0")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.9.1")
 
     compileOnly("javax.servlet:javax.servlet-api:4.0.1")
 
