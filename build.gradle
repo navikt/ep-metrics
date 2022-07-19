@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springVersion = '5.3.21'
+        springVersion = '5.3.22'
         kotlinVersion = '1.7.10'
         mockkVersion = '1.12.4'
     }
