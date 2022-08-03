@@ -2,7 +2,7 @@ buildscript {
     ext {
         springVersion = '5.3.22'
         kotlinVersion = '1.7.10'
-        mockkVersion = '1.12.4'
+        mockkVersion = '1.12.5'
     }
 
     repositories {
