@@ -26,10 +26,3 @@ dependencies {
     testImplementation("org.springframework:spring-test")
     testImplementation("io.mockk:mockk:$mockkVersion")
 }
-
-// https://github.com/researchgate/gradle-release
-release {
-    git {
-        requireBranch.set('main')
-    }
-}
