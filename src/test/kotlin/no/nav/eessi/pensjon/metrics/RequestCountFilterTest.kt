@@ -10,6 +10,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
+import java.net.URI
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
 
@@ -20,6 +21,8 @@ class RequestCountFilterTest {
     private val filter = RequestCountFilter(meterRegistry, true)
 
     private val someUri = "/abc"
+    private val someInvolvedUri = "https://server.example.com:666/path/morepath/7897/path/578?field=74289&field2=secret"
+    private val someSimplifedUri = "server:666/path/morepath/{}/path/{}?field={}&field2={}"
     private val httpGet = "GET"
     private val httpPost = "POST"
     private val clientError = 400
@@ -52,6 +55,14 @@ class RequestCountFilterTest {
         filter.doFilter(request, MockHttpServletResponse(), MockFilterChain())
 
         assertCount(1, httpGet, someUri, SUCCESS_VALUE, 200, NO_EXCEPTION_TAG_VALUE)
+    }
+
+    @Test
+    fun `should count simplify involved uris`() {
+        val request = MockHttpServletRequest(httpGet, someInvolvedUri)
+        filter.doFilter(request, MockHttpServletResponse(), MockFilterChain())
+
+        assertCount(1, httpGet, someSimplifedUri, SUCCESS_VALUE, 200, NO_EXCEPTION_TAG_VALUE)
     }
 
     @Test

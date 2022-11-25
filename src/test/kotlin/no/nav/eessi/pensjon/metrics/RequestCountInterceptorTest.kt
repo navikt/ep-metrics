@@ -29,6 +29,8 @@ import java.util.stream.Collectors
 class RequestCountInterceptorTest {
 
     private val someUri = URI("/abc")
+    private val someInvolvedUri = URI("https://server.example.com:666/path/morepath/7897/path/578?field=74289&field2=secret")
+    private val someSimplifedUri = "server:666/path/morepath/{}/path/{}?field={}&field2={}"
     private val httpGet = HttpMethod.GET
     private val httpPost = HttpMethod.POST
 
@@ -67,6 +69,18 @@ class RequestCountInterceptorTest {
         requestCountInterceptor.intercept(mockRequest, aBody, mockExecution)
 
         assertCount(1, httpGet.name, someUri.toString(), RequestCountInterceptor.SUCCESS_VALUE, 200, "none")
+    }
+
+    @Test
+    fun `should simplify uris to remove ids and detail info`() {
+        mockRequest.method = httpGet
+        mockRequest.uri = someInvolvedUri
+
+        every { mockExecution.execute(any(), any()) } returns MockClientHttpResponse(responseBody, HttpStatus.OK)
+
+        requestCountInterceptor.intercept(mockRequest, aBody, mockExecution)
+
+        assertCount(1, httpGet.name, someSimplifedUri, RequestCountInterceptor.SUCCESS_VALUE, 200, "none")
     }
 
     @Test

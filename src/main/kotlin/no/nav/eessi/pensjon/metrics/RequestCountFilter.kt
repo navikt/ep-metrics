@@ -44,7 +44,7 @@ class RequestCountFilter(val meterRegistry: MeterRegistry, @Value("\${METRICS_RE
 
             meterRegistry.counter(COUNTER_METER_NAME,
                     HTTP_METHOD_TAG, httpServletRequest.method,
-                    URI_TAG, httpServletRequest.requestURI,
+                    URI_TAG, simplifyUri(httpServletRequest.requestURI),
                     TYPE_TAG, if (httpServletResponse.status < 400) SUCCESS_VALUE else FAILURE_VALUE,
                     STATUS_TAG, httpServletResponse.status.toString(),
                     EXCEPTION_TAG, if (httpServletResponse.status >= 400 && exception == NO_EXCEPTION_TAG_VALUE) UNKNOWN_EXCEPTION_TAG_VALUE else exception)

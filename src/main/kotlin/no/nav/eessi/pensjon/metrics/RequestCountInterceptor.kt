@@ -39,7 +39,7 @@ class RequestCountInterceptor(private val meterRegistry: MeterRegistry) : Client
         } finally {
             meterRegistry.counter(COUNTER_METER_NAME,
                     HTTP_METHOD_TAG, request.methodValue,
-                    URI_TAG, request.uri.toString(),
+                    URI_TAG, simplifyUri(request.uri),
                     TYPE_TAG, if (response != null && response.rawStatusCode < 400) SUCCESS_VALUE else FAILURE_VALUE,
                     STATUS_TAG, if (exception == NO_EXCEPTION_TAG_VALUE && response != null) response.rawStatusCode.toString() else UNKNOWN_STATUS_TAG_VALUE.toString(),
                     EXCEPTION_TAG, if (exception == NO_EXCEPTION_TAG_VALUE && (response == null || response.rawStatusCode >= 400)) UNKNOWN_EXCEPTION_TAG_VALUE else exception)
