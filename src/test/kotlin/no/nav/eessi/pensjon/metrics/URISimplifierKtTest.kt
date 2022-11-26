@@ -32,6 +32,9 @@ internal class URISimplifierKtTest {
             Arguments.of(URI("http://yo.yo/sed"), "yo:/sed"),
             Arguments.of(URI("/zed#'sdeadbabe"), "/zed"),
             Arguments.of(
+                URI("https://eux-rina-api.prod-fss-pub.nais.io/cpi/buc/90029410/sed/0bcf35362a2440a28d17d9b8a33e5ba1"),
+                "eux-rina-api:/cpi/buc/{}/sed/{}"),
+            Arguments.of(
                 URI("https://server.example.com:666/path/morepath/7897/path/578?field=74289&field2=secret"),
                 "server:666/path/morepath/{}/path/{}?field={}&field2={}"
             ),

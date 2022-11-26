@@ -40,4 +40,7 @@ private fun valuesReplace(query: String) =
             it.split("=").let { it[0] + "={}" }
         }
 
-private fun digitsReplace(uri: String) = uri.replace(Regex("""\d{2,}"""), "{}")
+private fun digitsReplace(uri: String) =
+    uri
+        .replace(Regex("""[\da-f]{20,}"""), "{}") // lange hexadesimale id'er
+        .replace(Regex("""\d{3,}"""), "{}") // numeriske id'er
