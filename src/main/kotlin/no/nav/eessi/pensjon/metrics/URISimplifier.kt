@@ -20,7 +20,11 @@ internal fun simplifyUri(uri: URI): String {
         if (uri.path != null) sb.append(digitsReplace(uri.path))
         if (uri.query != null) {
             sb.append('?')
+            if (uri.query.contains("=")) {
             sb.append(valuesReplace(uri.query))
+            } else {
+                sb.append(valuesReplaceNormal(uri.query))
+            }
         }
     }
     return sb.toString()
@@ -40,7 +44,15 @@ private fun valuesReplace(query: String) =
             it.split("=").let { it[0] + "={}" }
         }
 
+private fun valuesReplaceNormal(query: String) =
+    query.split("&")
+        .joinToString("&") {
+            it.split("=").let { it[0]  }
+        }
+
 private fun digitsReplace(uri: String) =
     uri
-        .replace(Regex("""[\da-f]{20,}"""), "{}") // lange hexadesimale id'er
+        .replace(Regex("""/[\da-f]{33,}"""), "/{}")
+        .replace(Regex("""/[\da-f]{32}"""), "/{documentid}") // Antar at alle 32-tegn lange hexadesimale id'er er documentIder
+        .replace(Regex("""/[\da-f]{20,}"""), "/{}")
         .replace(Regex("""\d{3,}"""), "{}") // numeriske id'er
