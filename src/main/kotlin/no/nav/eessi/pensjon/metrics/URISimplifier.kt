@@ -52,9 +52,9 @@ private fun valuesReplaceUriWithoutEqualSign(query: String) =
 
 private fun digitsReplace(uri: String) =
     uri
-        .replace(Regex("""/[\da-f]{33,}"""), "/{}")
+        .replace(Regex("""/[\da-f]{33,}"""), "/{}")  // heksadesimale strenger som ikke er documentId
         .replace(Regex("""/[\da-f]{32}"""), "/{documentid}") // Antar at alle 32-tegn lange hexadesimale id'er er documentIder
-        .replace(Regex("""/[A-X][\d]{6}"""), "/{}")
-        .replace(Regex("""/[\da-f]{20,}"""), "/{}")
-        .replace(Regex("""/[A-X]{2}"""), "/{}")
+        .replace(Regex("""/[A-X][\d]{6}"""), "/{}")  //BrukerIdenter
+        .replace(Regex("""/[\da-f]{20,}"""), "/{}")  //heksadecimale strenger over 20-tegn
+        .replace(Regex("""/[A-X]{2}"""), "/{}")  // Landkoder
         .replace(Regex("""\d{3,}"""), "{}") // numeriske id'er
