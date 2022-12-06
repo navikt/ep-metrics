@@ -33,7 +33,16 @@ internal class URISimplifierKtTest {
             Arguments.of(URI("/zed#'sdeadbabe"), "/zed"),
             Arguments.of(
                 URI("https://eux-rina-api.prod-fss-pub.nais.io/cpi/buc/90029410/sed/0bcf35362a2440a28d17d9b8a33e5ba1"),
-                "eux-rina-api:/cpi/buc/{}/sed/{}"),
+                "eux-rina-api:/cpi/buc/{}/sed/{documentid}"),
+            Arguments.of(URI("/sed/0bcf35362a2440a28d17d9b8a33e5ba1"), "/sed/{documentid}"),
+            Arguments.of(URI("/sed/0bcf35362a2440a28d17d9b8a33e5ba1/bla"), "/sed/{documentid}/bla"),
+            Arguments.of(URI("/sed/0bcf35362a2440a28d17d9b8a33e5ba1?bla"), "/sed/{documentid}?bla"),
+            Arguments.of(URI("/sed/0bcf35362a2440a28d17d9b8a33e5ba1dff/bla"), "/sed/{}/bla"),
+            Arguments.of(URI("/sed/0bcf35362a2440a28d17d9b8a33/bla"), "/sed/{}/bla"),
+            Arguments.of(URI("/sed/daffe/bla"), "/sed/daffe/bla"),
+            Arguments.of(URI("/brukerinfo/X124789"), "/brukerinfo/{}"),
+            Arguments.of(URI("/sed/daffe/bla"), "/sed/daffe/bla"),
+            Arguments.of(URI("/eux/institutions/P_BUC_01/SE"), "/eux/institutions/P_BUC_01/{}"),
             Arguments.of(
                 URI("https://server.example.com:666/path/morepath/7897/path/578?field=74289&field2=secret"),
                 "server:666/path/morepath/{}/path/{}?field={}&field2={}"

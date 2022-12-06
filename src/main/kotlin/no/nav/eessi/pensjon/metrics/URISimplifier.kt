@@ -20,7 +20,7 @@ internal fun simplifyUri(uri: URI): String {
         if (uri.path != null) sb.append(digitsReplace(uri.path))
         if (uri.query != null) {
             sb.append('?')
-            sb.append(valuesReplace(uri.query))
+            sb.append(valuesReplace(uri))
         }
     }
     return sb.toString()
@@ -34,13 +34,23 @@ internal fun simplifyUri(uri: String): String {
     }
 }
 
-private fun valuesReplace(query: String) =
-    query.split("&")
-        .joinToString("&") {
-            it.split("=").let { it[0] + "={}" }
-        }
+private fun valuesReplace(uri: URI) : String {
+    return if (uri.query.contains("=")) {
+        uri.query.split("&")
+            .joinToString("&") {
+                it.split("=").let { it[0] + "={}" }
+            }
+    } else {
+        uri.query.split("&")
+            .joinToString("&")
+    }
+}
 
 private fun digitsReplace(uri: String) =
     uri
-        .replace(Regex("""[\da-f]{20,}"""), "{}") // lange hexadesimale id'er
+        .replace(Regex("""/[\da-f]{33,}"""), "/{}")  // heksadesimale strenger som ikke er documentId
+        .replace(Regex("""/[\da-f]{32}"""), "/{documentid}") // Antar at alle 32-tegn lange hexadesimale id'er er documentIder
+        .replace(Regex("""/[A-X]\d{6}"""), "/{}")  //BrukerIdenter
+        .replace(Regex("""/[\da-f]{20,}"""), "/{}")  //heksadecimale strenger over 20-tegn
+        .replace(Regex("""/[A-X]{2}"""), "/{}")  // Landkoder
         .replace(Regex("""\d{3,}"""), "{}") // numeriske id'er
