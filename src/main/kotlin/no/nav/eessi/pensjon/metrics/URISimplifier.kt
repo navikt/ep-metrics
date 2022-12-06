@@ -20,11 +20,7 @@ internal fun simplifyUri(uri: URI): String {
         if (uri.path != null) sb.append(digitsReplace(uri.path))
         if (uri.query != null) {
             sb.append('?')
-            if (uri.query.contains("=")) {
-            sb.append(valuesReplace(uri.query))
-            } else {
-                sb.append(valuesReplaceUriWithoutEqualSign(uri.query))
-            }
+            sb.append(valuesReplace(uri))
         }
     }
     return sb.toString()
@@ -38,17 +34,17 @@ internal fun simplifyUri(uri: String): String {
     }
 }
 
-private fun valuesReplace(query: String) =
-    query.split("&")
-        .joinToString("&") {
-            it.split("=").let { it[0] + "={}" }
-        }
-
-private fun valuesReplaceUriWithoutEqualSign(query: String) =
-    query.split("&")
-        .joinToString("&") {
-            it.split("=").let { it[0]  }
-        }
+private fun valuesReplace(uri: URI) : String {
+    return if (uri.query.contains("=")) {
+        uri.query.split("&")
+            .joinToString("&") {
+                it.split("=").let { it[0] + "={}" }
+            }
+    } else {
+        uri.query.split("&")
+            .joinToString("&")
+    }
+}
 
 private fun digitsReplace(uri: String) =
     uri
