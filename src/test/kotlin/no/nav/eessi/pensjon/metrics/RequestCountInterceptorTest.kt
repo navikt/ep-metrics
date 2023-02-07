@@ -10,7 +10,6 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -68,7 +67,7 @@ class RequestCountInterceptorTest {
 
         requestCountInterceptor.intercept(mockRequest, aBody, mockExecution)
 
-        assertCount(1, httpGet.name, someUri.toString(), RequestCountInterceptor.SUCCESS_VALUE, 200, "none")
+        assertCount(1, httpGet.name(), someUri.toString(), RequestCountInterceptor.SUCCESS_VALUE, 200, "none")
     }
 
     @Test
@@ -80,7 +79,7 @@ class RequestCountInterceptorTest {
 
         requestCountInterceptor.intercept(mockRequest, aBody, mockExecution)
 
-        assertCount(1, httpGet.name, someSimplifedUri, RequestCountInterceptor.SUCCESS_VALUE, 200, "none")
+        assertCount(1, httpGet.name(), someSimplifedUri, RequestCountInterceptor.SUCCESS_VALUE, 200, "none")
     }
 
     @Test
@@ -92,7 +91,7 @@ class RequestCountInterceptorTest {
 
         requestCountInterceptor.intercept(mockRequest, aBody, mockExecution)
 
-        assertCount(1, httpPost.name, someUri.toString(), RequestCountInterceptor.FAILURE_VALUE, 400, RequestCountInterceptor.UNKNOWN_EXCEPTION_TAG_VALUE)
+        assertCount(1, httpPost.name(), someUri.toString(), RequestCountInterceptor.FAILURE_VALUE, 400, RequestCountInterceptor.UNKNOWN_EXCEPTION_TAG_VALUE)
     }
 
     @Test
@@ -106,7 +105,7 @@ class RequestCountInterceptorTest {
             requestCountInterceptor.intercept(mockRequest, aBody, mockExecution)
         }
 
-        assertCount(1, httpPost.name, someUri.toString(), RequestCountInterceptor.FAILURE_VALUE, RequestCountInterceptor.UNKNOWN_STATUS_TAG_VALUE, "IOException")
+        assertCount(1, httpPost.name(), someUri.toString(), RequestCountInterceptor.FAILURE_VALUE, RequestCountInterceptor.UNKNOWN_STATUS_TAG_VALUE, "IOException")
     }
 
     private fun assertCount(expectedCount: Int, httpMethod: String, uri: String, type: String, status: Int, exception: String) {

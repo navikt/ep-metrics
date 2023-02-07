@@ -3,6 +3,8 @@ package no.nav.eessi.pensjon.metrics
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import io.mockk.every
 import io.mockk.mockk
+import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -10,10 +12,6 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
-import java.net.URI
-import javax.servlet.FilterChain
-import javax.servlet.ServletException
-
 
 class RequestCountFilterTest {
 

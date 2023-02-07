@@ -87,7 +87,7 @@ class MetricsHelper(val registry: MeterRegistry, @Autowired(required = false) va
                         } ?: block.invoke()
             } catch (throwable: Throwable) {
                 if(throwable is HttpStatusCodeException && throwable.statusCode in ignoreHttpCodes) ignoreErrorCode = true
-                if(throwable is ResponseStatusException && throwable.status in ignoreHttpCodes) ignoreErrorCode = true
+                if(throwable is ResponseStatusException && throwable.statusCode in ignoreHttpCodes) ignoreErrorCode = true
 
                 typeTag = failure
                 throw throwable
