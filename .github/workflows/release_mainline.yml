@@ -15,8 +15,8 @@ on:
 jobs:
   release:
     permissions:
-      contents: write # for dependency submission
-      id-token: write # for nais/docker-build-push
+      contents: "read"
+      id-token: "write"
     runs-on: ubuntu-latest
     steps:
       - name: 'Pull repo'
