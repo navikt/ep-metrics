@@ -18,6 +18,7 @@ jobs:
   bygg:
     permissions:
       packages: write
+      id-token: write
       contents: read
     runs-on: ubuntu-latest
     steps:
