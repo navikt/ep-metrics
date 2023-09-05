@@ -17,8 +17,8 @@ on:
 jobs:
   bygg:
     permissions:
-      packages: "read"
-      id-token: "read"
+      packages: "write"
+      id-token: "write"
       contents: "write"
     runs-on: ubuntu-latest
     steps:
