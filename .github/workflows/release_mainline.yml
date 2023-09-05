@@ -15,8 +15,8 @@ on:
 jobs:
   release:
     permissions:
-      packages: "write"
-      id-token: "write"
+      packages: "read"
+      id-token: "read"
       contents: "write"
     runs-on: ubuntu-latest
     steps:
