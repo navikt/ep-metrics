@@ -10,7 +10,7 @@ dependencies {
     implementation("org.springframework:spring-context")
     implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
 
-    implementation("io.micrometer:micrometer-registry-prometheus:1.11.3")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.11.4")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
